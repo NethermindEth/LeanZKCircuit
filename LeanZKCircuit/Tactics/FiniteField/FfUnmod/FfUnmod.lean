@@ -15,7 +15,7 @@ namespace LeanZKCircuit
 
 namespace FFUnmod
 
-open Qq Lean Meta Elab Term Tactic OpT
+open Qq Lean Meta Elab Term Tactic ArithT
 
 /--
   Unfortunately, many standard `Field` types don't compute their cardinality.
@@ -55,21 +55,23 @@ def isFFexpr (e : Expr) (p : Option ℕ := .none) (trace := false) : MetaM Bool 
 
   `unified arguments` are instantiated `MVars` of the arguments of the `operation`.
 -/
-def identify? (e : Expr) : MetaM (Option FFieldExpr) := do
-  let .some fieldT ← knownField? e | pure .none
+def identifyArith? (e : Expr) : MetaM (Option FFieldExpr) := do
+  let .some fieldT ← fieldOfArith? e | return .none
   for op in allOps do
-    match ←matchOpT? e op fieldT with
-    | .none => continue
+    match ←matchArithT? e op fieldT with
+    | .none => logInfo m!"{repr op} doesn't match"; continue
     | .some mvars => return .some ⟨op, fieldT, mvars⟩
   return .none
 
-def rewriteLemmasOfExpr (e : Expr) : MetaM (Array Name) := do
-  let .some ffe@⟨op, t, args⟩ ← identify? e | pure #[]
+def rewriteLemmasOfArith (e : Expr) : MetaM (Array Name) := do
+  let .some ffe@⟨op, t, args⟩ ← identifyArith? e | pure #[]
   logInfo m!"The expression: {e} is an operation: {repr op} over type: {repr t} with args: {args}"
   logInfo m!"Ready to rewrite with lemmas: {ffe.toRewriteLemmas}"
   return ffe.toRewriteLemmas
 
--- def 
+elab "ff_unmod" : tactic => do
+  let x ← rewriteLemmasOfArith (←getMainTarget)
+  logInfo m!"[ff_unmod] Rewriting with {x}."
 
 notation "BB" => 2013265921
 
@@ -77,10 +79,14 @@ def x : Fin BB := 4
 def y : Fin BB := 5
 def z : Fin BB := 6
 
-#eval rewriteLemmasOfExpr (q(x + z))
-#eval rewriteLemmasOfExpr (q(Add.add x z))
-#eval rewriteLemmasOfExpr (q(HAdd.hAdd x z))
-#eval rewriteLemmasOfExpr (q(Fin.add x z))
+#eval rewriteLemmasOfArith (q(x + z))
+#eval rewriteLemmasOfArith (q(x = z))
+#eval rewriteLemmasOfArith (q(Add.add x z))
+#eval rewriteLemmasOfArith (q(HAdd.hAdd x z))
+#eval rewriteLemmasOfArith (q(Fin.add x z))
+
+example : x + y := by
+  ff_unmod
 
 end FFUnmod
 
