@@ -1,21 +1,25 @@
 import Mathlib
 
-structure Circuit (F: Type) [Field F] (ExtF: Type) [Field ExtF] where -- should these be parameters or members?
-  buses: (index: ℕ) -> List (F × List F)
-  challenge: (index: ℕ) -> ExtF
-  exposed: (index: ℕ) -> ExtF -- TODO should this be ExtF?,
-  main: (id: ℕ) -> (column: ℕ) -> (row: ℕ) -> (rotation: ℕ) -> F
-  permutation: (column: ℕ) -> (row: ℕ) -> (rotation: ℕ) -> ExtF
-  preprocessed: (column: ℕ) -> (row: ℕ) -> (rotation: ℕ) -> F
-  public_values: (index: ℕ) -> F
-  last_row: ℕ
+class Circuit (F : Type) [Field F] (ExtF : Type) [Field ExtF] (α : Type → Type → Type) where
+  buses: α F ExtF → (index: ℕ) -> List (F × List F)
+  challenge: α F ExtF → (index: ℕ) -> ExtF
+  exposed: α F ExtF → (index: ℕ) -> ExtF
+  main: α F ExtF → (id: ℕ) -> (column: ℕ) -> (row: ℕ) -> (rotation: ℕ) -> F
+  permutation: α F ExtF → (column: ℕ) -> (row: ℕ) -> (rotation: ℕ) -> ExtF
+  preprocessed: α F ExtF → (column: ℕ) -> (row: ℕ) -> (rotation: ℕ) -> F
+  public_values: α F ExtF → (index: ℕ) -> F
+  last_row: α F ExtF → ℕ
 
-def Circuit.isFirstRow [Field F] [Field ExtF] (_c: Circuit F ExtF) (row: ℕ): F :=
+variable {C : Type → Type → Type} {F ExtF : Type} [Field F] [Field ExtF] [Circuit F ExtF C]
+
+def Circuit.isFirstRow (_circuit : C F ExtF) (row : ℕ) : F :=
   if row = 0 then 1 else 0
-def Circuit.isLastRow [Field F] [Field ExtF] (c: Circuit F ExtF) (row: ℕ): F :=
-  if row = c.last_row then 1 else 0
-def Circuit.isTransitionRow [Field F] [Field ExtF] (c: Circuit F ExtF) (row: ℕ): F :=
-  if row = c.last_row then 0 else 1
+
+def Circuit.isLastRow (circuit : C F ExtF) (row : ℕ) : F :=
+  if row = Circuit.last_row circuit then 1 else 0
+
+def Circuit.isTransitionRow (circuit : C F ExtF) (row : ℕ): F :=
+  if row = Circuit.last_row circuit then 0 else 1
 
 register_simp_attr openvm_encapsulation
 
