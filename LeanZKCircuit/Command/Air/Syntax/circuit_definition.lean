@@ -26,7 +26,5 @@ def parse_circuit_definition (circuit_definition: TSyntax `circuit_definition) (
     | _ => throwError "Failed to parse circuit definition"
   if log then
     logInfo m!"{←res}"
-  else
-    pure ()
 
   res

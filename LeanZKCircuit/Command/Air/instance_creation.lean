@@ -1,7 +1,3 @@
-import Mathlib
-
-import LeanZKCircuit.OpenVM.Circuit
-
 import LeanZKCircuit.Command.Air.Syntax.circuit_definition
 import LeanZKCircuit.Command.util
 

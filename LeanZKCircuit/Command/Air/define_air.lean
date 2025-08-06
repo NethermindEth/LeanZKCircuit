@@ -1,16 +1,9 @@
-import Mathlib
-
-import LeanZKCircuit.OpenVM.Circuit
-
-import LeanZKCircuit.Command.Air.Syntax.circuit_definition
-import LeanZKCircuit.Command.Air.assign_columns
+import LeanZKCircuit.Command.Air.Lemmas.base_member_projection
+import LeanZKCircuit.Command.Air.Lemmas.subcircuit_isValid
 import LeanZKCircuit.Command.Air.instance_creation
 import LeanZKCircuit.Command.Air.is_valid
 import LeanZKCircuit.Command.Air.structure_definition
 import LeanZKCircuit.Command.Air.valid_circuit
-import LeanZKCircuit.Command.Air.Lemmas.base_member_projection
-import LeanZKCircuit.Command.Air.Lemmas.subcircuit_isValid
-import LeanZKCircuit.Command.util
 
 open Lean Parser
 

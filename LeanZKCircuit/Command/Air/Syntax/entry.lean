@@ -13,8 +13,12 @@ instance : ToMessageData Entry where
     | .column name => s!"Column[{name}]"
     | .subair name typeName width => s!"SubAir[{name} : {typeName} width := {width}]"
 
--- Parsing entries is troublesome because lean will easily match either category even when they do not match fully,
--- so here we do the transformation once and map to a properly tagged inductive
+/--
+Parsing entries is troublesome because lean will easily match either category even when they do not match fully,
+so here we do the transformation once and map to a properly tagged inductive
+
+REVIEW: A single match?
+-/ 
 def parse_entry (entry: TSyntax `entry) (log : Bool := false) : Elab.Command.CommandElabM Entry := do
   let entry := match entry with
     | `(entry| SubAir[$name:str : $typeName:str width := $w:num]) =>
@@ -26,7 +30,5 @@ def parse_entry (entry: TSyntax `entry) (log : Bool := false) : Elab.Command.Com
 
   if log then
     logInfo m!"{←entry}"
-  else
-    pure ()
 
   entry
