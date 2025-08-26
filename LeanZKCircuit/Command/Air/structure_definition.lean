@@ -8,15 +8,15 @@ def append_air_structure_fields (base_string: String) (circuit: AirDefinition) :
   circuit.entries.foldl (
     λ struct_string entry => match entry with
       | .column name => s!"{struct_string}\n  {name} (row : ℕ) (rotation : ℕ) : F"
-      | .main_subair name typeName _ => s!"{struct_string}\n  {name} : Raw_{typeName} F ExtF"
-      | .preprocessed_subair name typeName _ => s!"{struct_string}\n  {name} : Raw_{typeName} F ExtF"
+      | .main_subair name typeName _ => s!"{struct_string}\n  {name} : Raw_{typeName} F"
+      | .preprocessed_subair name typeName _ => s!"{struct_string}\n  {name} : Raw_{typeName} F"
   ) base_string
 
 def append_subair_structure_fields (base_string: String) (circuit: SubAirDefinition) : String :=
   circuit.entries.foldl (
     λ struct_string entry => match entry with
       | .column name => s!"{struct_string}\n  {name} (row : ℕ) (rotation : ℕ) : F"
-      | .subair name typeName _ => s!"{struct_string}\n  {name} : Raw_{typeName} F ExtF"
+      | .subair name typeName _ => s!"{struct_string}\n  {name} : Raw_{typeName} F"
   ) base_string
 
 def define_raw_air_structure
