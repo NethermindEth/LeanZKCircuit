@@ -19,9 +19,9 @@ def define_subair_valid_circuit_abbrev
 : Elab.Command.CommandElabM Unit := do
   let command :=
     s!"abbrev Valid_{defn.name}\n" ++
-    s!"  (F: Type) (ExtF: Type)\n" ++
+    s!"  (F: Type)\n" ++
     s!":=\n" ++
-    s!"  {"{"} c : Raw_{defn.name} F ExtF // c.isValid {"}"}"
+    s!"  {"{"} c : Raw_{defn.name} F // c.isValid {"}"}"
   runAsCommand command log
 
 def create_valid_circuit_base_projection
@@ -53,11 +53,11 @@ def create_subair_valid_circuit_base_projections
   create_valid_circuit_base_projection defn.name "columns" "F" log
 
 def create_valid_circuit_column_projection
-  (circuit : String) (column : String) (log : Bool := false)
+  (circuit : String) (column : String) (type_params: String) (log : Bool := false)
 : Elab.Command.CommandElabM Unit := do
   let command :=
-    s!"def Valid_{circuit}.{column} {"{"}F ExtF{"}"}\n" ++
-    s!"  (c : Valid_{circuit} F ExtF) (row rotation : ℕ)\n" ++
+    s!"def Valid_{circuit}.{column} {"{"}{type_params}{"}"}\n" ++
+    s!"  (c : Valid_{circuit} {type_params}) (row rotation : ℕ)\n" ++
     s!": F :=\n" ++
     s!"  c.1.{column} row rotation"
 
@@ -82,7 +82,7 @@ def create_air_valid_circuit_custom_member_projections
   defn.entries.forM λ entry =>
     match entry with
       | .column name =>
-        create_valid_circuit_column_projection defn.name name log
+        create_valid_circuit_column_projection defn.name name "F ExtF" log
       | .main_subair name typename _ =>
         create_valid_circuit_subair_projection defn.name name typename "F ExtF" log
       | .preprocessed_subair name typename _ =>
@@ -94,11 +94,11 @@ def create_subair_valid_circuit_custom_member_projections
   defn.entries.forM λ entry =>
     match entry with
       | .column name =>
-        create_valid_circuit_column_projection defn.name name log
+        create_valid_circuit_column_projection defn.name name "F" log
       | .subair name typename _ =>
         create_valid_circuit_subair_projection defn.name name typename "F" log
 
-def prove_valid_circuit_column_assignment
+def prove_air_valid_circuit_column_assignment
   (circuit : String) (simp_attribute: String) (pos: ℕ) (column : String) (member : String) (log : Bool := false)
 : Elab.Command.CommandElabM Unit := do
   let command :=
@@ -107,7 +107,17 @@ def prove_valid_circuit_column_assignment
     s!"  (c : Valid_{circuit} F ExtF) (row rotation: ℕ) :\n" ++
     s!"c.{column} row rotation = c.{member} row rotation :=\n" ++
     s!"  (c.2.2 row rotation){transformIndex pos}"
+  runAsCommand command log
 
+def prove_subair_valid_circuit_column_assignment
+  (circuit : String) (simp_attribute: String) (pos: ℕ) (column : String) (member : String) (log : Bool := false)
+: Elab.Command.CommandElabM Unit := do
+  let command :=
+    s!"@[{simp_attribute}]\n" ++
+    s!"lemma Valid_{circuit}.col_{pos} {"{"}F{"}"} [Field F]\n" ++
+    s!"  (c : Valid_{circuit} F) (row rotation: ℕ) :\n" ++
+    s!"c.{column} row rotation = c.{member} row rotation :=\n" ++
+    s!"  (c.2.2 row rotation){transformIndex pos}"
   runAsCommand command log
 
 def prove_valid_air_column_assignments
@@ -118,7 +128,7 @@ def prove_valid_air_column_assignments
     let column := assignment.1.1
     let member := assignment.1.2
     let idx := assignment.2
-    prove_valid_circuit_column_assignment
+    prove_air_valid_circuit_column_assignment
       defn.name
       defn.simp_attribute
       idx
@@ -134,7 +144,7 @@ def prove_valid_subair_column_assignments
     let column := assignment.1.1
     let member := assignment.1.2
     let idx := assignment.2
-    prove_valid_circuit_column_assignment
+    prove_subair_valid_circuit_column_assignment
       defn.name
       defn.simp_attribute
       idx

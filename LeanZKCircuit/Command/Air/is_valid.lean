@@ -48,8 +48,8 @@ def define_subair_isValid
   let num_columns := (calculate_subair_column_assignments defn).length
   let columns_term := isValid_column_assignments_term num_columns
   let command :=
-    s!"def Raw_{defn.name}.isValid {"{"}F ExtF{"}"}\n" ++
-    s!"  (c: Raw_{defn.name} F ExtF)\n" ++
+    s!"def Raw_{defn.name}.isValid {"{"}F{"}"}\n" ++
+    s!"  (c: Raw_{defn.name} F)\n" ++
     s!": Prop :=\n" ++
     s!"  ({subair_term}) ∧\n" ++
     s!"  (∀ row rotation, {columns_term})"

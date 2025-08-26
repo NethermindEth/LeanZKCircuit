@@ -61,11 +61,11 @@ def calculate_subair_column_assignments
   ) (0, [])).2
 
 def define_column_assignment
-  (circuit: String) (simp_attribute: String) (type_params: String) (col: String) (member: String) (log : Bool := false)
+  (circuit: String) (simp_attribute: String) (type_params: String) (idx: ℕ) (col: String) (member: String) (log : Bool := false)
 : Elab.Command.CommandElabM Unit := do
   let command :=
     s!"@[{simp_attribute}]\n" ++
-    s!"def {circuit}.col_{col} {"{"}{type_params}{"}"}\n" ++
+    s!"def {circuit}.col_{idx} {"{"}{type_params}{"}"}\n" ++
     s!"  (c: {circuit} {type_params}) (row: ℕ) (rotation: ℕ)\n" ++
     s!": Prop :=\n" ++
     s!"  c.{col} (row := row) (rotation := rotation) =\n" ++
@@ -78,10 +78,11 @@ def assign_raw_air_columns
   let column_assignments := calculate_air_column_assignments defn
   if log then logInfo m!"Calculated air column assignments:\n{column_assignments}"
 
-  discard (column_assignments.mapM (λ assignment =>
-    let col := assignment.1
-    let member := assignment.2
-    define_column_assignment s!"Raw_{defn.name}" defn.simp_attribute "F ExtF" col member log
+  discard (column_assignments.zipIdx.mapM (λ assignment =>
+    let col := assignment.1.1
+    let member := assignment.1.2
+    let idx := assignment.2
+    define_column_assignment s!"Raw_{defn.name}" defn.simp_attribute "F ExtF" idx col member log
   ))
 
 def assign_raw_subair_columns
@@ -90,8 +91,9 @@ def assign_raw_subair_columns
   let column_assignments := calculate_subair_column_assignments defn
   if log then logInfo m!"Calculated subair column assignments:\n{column_assignments}"
 
-  discard (column_assignments.mapM (λ assignment =>
-    let col := assignment.1
-    let member := assignment.2
-    define_column_assignment s!"Raw_{defn.name}" defn.simp_attribute "F" col member log
+  discard (column_assignments.zipIdx.mapM (λ assignment =>
+    let col := assignment.1.1
+    let member := assignment.1.2
+    let idx := assignment.2
+    define_column_assignment s!"Raw_{defn.name}" defn.simp_attribute "F" idx col member log
   ))
