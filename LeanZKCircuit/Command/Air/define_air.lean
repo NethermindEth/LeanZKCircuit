@@ -7,9 +7,66 @@ import LeanZKCircuit.Command.Air.valid_circuit
 
 open Lean Parser
 
+def check_air_member_names
+  (defn: AirDefinition) (log : Bool := false)
+: Elab.Command.CommandElabM Unit := do
+  if log then logInfo m!"Checking member names do not clash with Circuit members"
+
+  if defn.entries.any (λ x => x.name == "buses") then
+    throwError "Buses cannot be used as a member name"
+  else if defn.entries.any (λ x => x.name == "challenge") then
+    throwError "challenge cannot be used as a member name"
+  else if defn.entries.any (λ x => x.name == "exposed") then
+    throwError "exposed cannot be used as a member name"
+  else if defn.entries.any (λ x => x.name == "main") then
+    throwError "main cannot be used as a member name"
+  else if defn.entries.any (λ x => x.name == "permutation") then
+    throwError "permutation cannot be used as a member name"
+  else if defn.entries.any (λ x => x.name == "preprocessed") then
+    throwError "preprocessed cannot be used as a member name"
+  else if defn.entries.any (λ x => x.name == "public_values") then
+    throwError "public_values cannot be used as a member name"
+  else if defn.entries.any (λ x => x.name == "last_row") then
+    throwError "last_row cannot be used as a member name"
+  else if defn.entries.any (λ x => x.name == "isFirstRow") then
+    throwError "isFirstRow cannot be used as a member name"
+  else if defn.entries.any (λ x => x.name == "isLastRow") then
+    throwError "isLastRow cannot be used as a member name"
+  else if defn.entries.any (λ x => x.name == "isTransitionRow") then
+    throwError "isTransitionRow cannot be used as a member name"
+
+def check_subair_member_names
+  (defn: SubAirDefinition) (log : Bool := false)
+: Elab.Command.CommandElabM Unit := do
+  if log then logInfo m!"Checking member names do not clash with Circuit members"
+
+  if defn.entries.any (λ x => x.name == "buses") then
+    throwError "Buses cannot be used as a member name"
+  else if defn.entries.any (λ x => x.name == "challenge") then
+    throwError "challenge cannot be used as a member name"
+  else if defn.entries.any (λ x => x.name == "exposed") then
+    throwError "exposed cannot be used as a member name"
+  else if defn.entries.any (λ x => x.name == "main") then
+    throwError "main cannot be used as a member name"
+  else if defn.entries.any (λ x => x.name == "permutation") then
+    throwError "permutation cannot be used as a member name"
+  else if defn.entries.any (λ x => x.name == "preprocessed") then
+    throwError "preprocessed cannot be used as a member name"
+  else if defn.entries.any (λ x => x.name == "public_values") then
+    throwError "public_values cannot be used as a member name"
+  else if defn.entries.any (λ x => x.name == "last_row") then
+    throwError "last_row cannot be used as a member name"
+  else if defn.entries.any (λ x => x.name == "isFirstRow") then
+    throwError "isFirstRow cannot be used as a member name"
+  else if defn.entries.any (λ x => x.name == "isLastRow") then
+    throwError "isLastRow cannot be used as a member name"
+  else if defn.entries.any (λ x => x.name == "isTransitionRow") then
+    throwError "isTransitionRow cannot be used as a member name"
+
 def define_air
   (air_definition: AirDefinition) (log : Bool := false)
 : Elab.Command.CommandElabM Unit := do
+  check_air_member_names air_definition log
   define_raw_air_structure air_definition log
   create_raw_circuit_instance air_definition log
   assign_raw_air_columns air_definition log
@@ -26,6 +83,7 @@ def define_air
 def define_subair
   (subair_definition: SubAirDefinition) (log : Bool := false)
 : Elab.Command.CommandElabM Unit := do
+  check_subair_member_names subair_definition
   define_raw_subair_structure subair_definition log
   assign_raw_subair_columns subair_definition log
   define_subair_isValid subair_definition log

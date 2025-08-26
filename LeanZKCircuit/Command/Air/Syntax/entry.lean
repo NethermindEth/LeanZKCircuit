@@ -20,6 +20,15 @@ inductive SubAirEntry
   | column (name: String)
   | subair (name: String) (typeName: String) (width: ℕ)
 
+def AirEntry.name (entry: AirEntry) : String := match entry with
+  | column name => name
+  | main_subair name _ _ => name
+  | preprocessed_subair name _ _ => name
+
+def SubAirEntry.name (entry: SubAirEntry) : String := match entry with
+  | column name => name
+  | subair name _ _ => name
+
 instance : ToMessageData AirEntry where
   toMessageData := λ entry => match entry with
     | .column name => s!"Column[{name}]"
