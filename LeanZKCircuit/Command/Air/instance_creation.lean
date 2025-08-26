@@ -1,4 +1,4 @@
-import LeanZKCircuit.Command.Air.Syntax.circuit_definition
+import LeanZKCircuit.Command.Air.Syntax.air_definition
 import LeanZKCircuit.Command.util
 
 open Lean Parser
@@ -21,11 +21,11 @@ def create_circuit_instance
   runAsCommand instance_string log
 
 def create_raw_circuit_instance
-  (defn: CircuitDefinition) (log : Bool := false)
+  (defn: AirDefinition) (log : Bool := false)
 : Elab.Command.CommandElabM Unit :=
   create_circuit_instance s!"Raw_{defn.name}" log
 
 def create_valid_circuit_instance
-  (defn: CircuitDefinition) (log : Bool := false)
+  (defn: AirDefinition) (log : Bool := false)
 : Elab.Command.CommandElabM Unit :=
   create_circuit_instance s!"Valid_{defn.name}" log

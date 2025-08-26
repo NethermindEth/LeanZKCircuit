@@ -4,7 +4,7 @@
 import LeanZKCircuit.Command.Air.Lemmas.base_member_projection
 import LeanZKCircuit.Command.Air.Lemmas.subcircuit_isValid
 
-import LeanZKCircuit.Command.Air.Syntax.circuit_definition
+import LeanZKCircuit.Command.Air.Syntax.air_definition
 import LeanZKCircuit.Command.Air.Syntax.entry
 
 import LeanZKCircuit.Command.Air.assign_columns
