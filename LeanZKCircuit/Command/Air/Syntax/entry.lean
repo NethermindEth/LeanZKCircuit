@@ -2,14 +2,13 @@ import Mathlib
 
 open Lean
 
-syntax air_entry :=
-  ("Column[" str "]") <|>
-  ("MainSubAir[" str ":" str "width" ":=" num "]") <|>
-  ("PreprocessedSubAir[" str ":" str "width" ":=" num "]")
+syntax column_entry := "Column[" str "]"
+syntax main_subair_entry := "MainSubAir[" str ":" str "width" ":=" num "]"
+syntax preprocessed_subair_entry := "PreprocessedSubAir[" str ":" str "width" ":=" num "]"
+syntax general_subair_entry := "SubAir[" str ":" str "width" ":=" num "]"
 
-syntax subair_entry :=
-  ("Column[" str "]") <|>
-  ("SubAir[" str ":" str "width" ":=" num "]")
+syntax air_entry := column_entry <|> main_subair_entry <|> preprocessed_subair_entry
+syntax subair_entry := column_entry <|> general_subair_entry
 
 inductive AirEntry
   | column (name: String)
