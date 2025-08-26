@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Algebra.EuclideanDomain.Field
 
 class Circuit (F : Type) [Field F] (ExtF : Type) [Field ExtF] (α : Type → Type → Type) where
   buses: α F ExtF → (index: ℕ) -> List (F × List F)
@@ -22,5 +22,3 @@ def Circuit.isTransitionRow (circuit : C F ExtF) (row : ℕ): F :=
   if row = Circuit.last_row circuit then 0 else 1
 
 register_simp_attr openvm_encapsulation
-
-#min_imports

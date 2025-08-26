@@ -36,11 +36,7 @@ def assign_raw_circuit_columns
   (defn: CircuitDefinition) (log : Bool := false)
 : Elab.Command.CommandElabM Unit := do
   let column_assignments := calculate_column_assignments defn
-
-  if log then
-    logInfo m!"Calculated column assignments:\n{column_assignments}"
-  else
-    pure ()
+  if log then logInfo m!"Calculated column assignments:\n{column_assignments}"
 
   discard (column_assignments.mapM (λ assignment =>
     let col := assignment.1
