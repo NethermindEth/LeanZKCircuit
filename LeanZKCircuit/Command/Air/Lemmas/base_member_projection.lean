@@ -14,17 +14,6 @@ def create_air_base_member_projection_lemma
     s!"  rfl"
   runAsCommand lemma_string log
 
-def create_subair_base_member_projection_lemma
-  (circuit: String) (simp_attribute: String) (member: String) (log : Bool := false)
-: Elab.Command.CommandElabM Unit := do
-  let lemma_string :=
-    s!"@[{simp_attribute}]\n" ++
-    s!"lemma {circuit}_{member}_project {"{"}F{"}"}\n" ++
-    s!"  (c: {circuit} F) [Field F] :\n" ++
-    s!"@Circuit.{member} F (by assumption) {circuit} _ c = c.{member} :=\n" ++
-    s!"  rfl"
-  runAsCommand lemma_string log
-
 def create_all_air_base_member_projection_lemmas
   (circuit: String) (simp_attribute: String) (log : Bool := false)
 : Elab.Command.CommandElabM Unit := do
@@ -41,8 +30,3 @@ def create_all_air_valid_base_member_projection_lemmas
   (defn: AirDefinition) (log : Bool := false)
 : Elab.Command.CommandElabM Unit := do
   create_all_air_base_member_projection_lemmas s!"Valid_{defn.name}" defn.simp_attribute log
-
-def create_all_subair_valid_base_member_projection_lemmas
-  (defn: SubAirDefinition) (log : Bool := false)
-: Elab.Command.CommandElabM Unit := do
-  create_subair_base_member_projection_lemma s!"Valid_{defn.name}" defn.simp_attribute "columns" log

@@ -33,7 +33,6 @@ def define_subair
   define_subair_valid_circuit_abbrev subair_definition log
   create_subair_valid_circuit_base_projections subair_definition log
   create_subair_valid_circuit_custom_member_projections subair_definition log
-  create_all_subair_valid_base_member_projection_lemmas subair_definition log
   prove_valid_subair_column_assignments subair_definition log
   pure ()
 
