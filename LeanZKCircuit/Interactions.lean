@@ -7,11 +7,8 @@ namespace Interaction
 
   @[grind]
   def balances [Field F] (i1 i2 : F × List F) : Prop :=
-    i1.1 + i2.1 = 0 ∧ i1.2 = i2.2
-
-  lemma balances_comm {i1 i2 : F × List F } :
-    balances i1 i2 ↔ balances i2 i1
-  := by grind
+    i1.1 + i2.1 = 0 ∧
+    (¬ i1.1 = (0 : F) → i1.2 = i2.2)
 
 end Interaction
 
@@ -146,7 +143,7 @@ namespace InteractionList
   lemma balanced_by_ordered_head_data
     {a b : (F × List F)}
     (h : balanced_by_ordered (a :: as) (b :: bs))
-  : a.2 = b.2 := by
+  : ¬ a.1 = 0 → a.2 = b.2 := by
     unfold balanced_by_ordered at h
     grind
 
