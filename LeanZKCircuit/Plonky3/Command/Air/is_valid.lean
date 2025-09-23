@@ -38,6 +38,11 @@ def define_air_isValid
     s!"def Raw_{defn.name}.isValid {"{"}F ExtF{"}"}\n" ++
     s!"  (c: Raw_{defn.name} F ExtF)\n" ++
     s!": Prop :=\n" ++
+    s!"  (∀ column row rotation,\n" ++
+    s!"    c.main column row rotation = c.main column ((row + rotation) % (c.last_row + 1)) 0 ∧\n" ++
+    s!"    c.permutation column row rotation = c.permutation column ((row + rotation) % (c.last_row + 1)) 0 ∧\n" ++
+    s!"    c.preprocessed column row rotation = c.preprocessed column ((row + rotation) % (c.last_row + 1)) 0\n" ++
+    s!"  ) ∧\n" ++
     s!"  ({subair_term}) ∧\n" ++
     s!"  (∀ row rotation, {columns_term})"
   runAsCommand command log
