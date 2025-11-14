@@ -21,4 +21,4 @@ import LeanZKCircuit.OpenVM.Circuit
 
 import LeanZKCircuit.Tactics.BitVec.bv_amicus_kerneli
 import LeanZKCircuit.Tactics.BitVec.bv_amicus_kerneli
-import LeanZKCircuit.Tactics.vector_eq
+import LeanZKCircuit.Tactics.VectorEq
