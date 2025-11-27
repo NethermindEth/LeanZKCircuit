@@ -106,7 +106,7 @@ def prove_air_valid_circuit_column_assignment
     s!"lemma Valid_{circuit}.col_{pos} {"{"}F ExtF{"}"} [Field F] [Field ExtF]\n" ++
     s!"  (c : Valid_{circuit} F ExtF) (row rotation: ℕ) :\n" ++
     s!"c.{column} row rotation = c.{member} row rotation :=\n" ++
-    s!"  (c.2.2 row rotation){transformIndex pos}"
+    s!"  (c.2.2.2 row rotation){transformIndex pos}"
   runAsCommand command log
 
 def prove_subair_valid_circuit_column_assignment
