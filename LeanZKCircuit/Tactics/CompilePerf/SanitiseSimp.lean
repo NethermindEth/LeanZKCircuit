@@ -59,10 +59,7 @@ def Mathlib.TacticAnalysis.simpToSimpOnly : TacticAnalysis.Config where
       | `(tactic|simp_all%$tk) => .accept <| .simpAll tk tk #[]
       | _ => .skip
     test ci ti ctx goal := do
-      dbg_trace "hello"
       let (loclen, tac, stats) ← ctx.stats goal ci ti
-      for e in stats.usedTheorems.toArray do
-        dbg_trace s!"e: {repr e}"
       let ((_, stx), _) ← ci.runTactic ti goal fun goal ↦ do
         run goal (mkSimpCallStx tac stats.usedTheorems) |>.run
       discard ∘ ci.runTactic ti goal fun goal ↦ do run goal (TryThis.addSuggestion ctx.stxBegin stx
